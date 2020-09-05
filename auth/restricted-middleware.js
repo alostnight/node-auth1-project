@@ -6,4 +6,4 @@ module.exports = (req, res, next) => {
             message: 'not logged in'
         });
     }
-}; 
+};

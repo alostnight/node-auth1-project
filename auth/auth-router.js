@@ -1,17 +1,18 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
-const Users = require('../users/users-model');
+const Users = require('../users/users-model.js');
 
 router.post('/register', async (req, res) => {
     const user = req.body;
 
-    const hash = bcrypt.hashSync(user.password, 20);
+    const hash = bcrypt.hashSync(user.password, 8);
     user.password = hash;
 
     try {
         const saved = await Users.add(user);
         res.status(201).json(saved);
     } catch (err) {
+        console.log(err);
         res.status(500).json(err);
     }
 });
@@ -30,7 +31,7 @@ router.post('/login', async (req, res) => {
             })
         } else {
             res.status(401).json({
-                message: 'Error'
+                message: 'Cannot login'
             });
         } 
     } catch (err) {
@@ -43,7 +44,7 @@ router.delete('/logout', (req, res) => {
         req.session.destroy((err) => {
             if (err) {
                 res.status(400).json({
-                    message: 'error logging out:', error:err
+                    message: 'error logging out:',
                 });
             } else {
                 res.json({
